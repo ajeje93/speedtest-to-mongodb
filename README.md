@@ -2,6 +2,8 @@
 
 This utility send the speedtest of the network on which it is performed on a MongoDB database.
 
+[![Docker Build](https://img.shields.io/docker/cloud/build/ajeje93/speedtest-to-mongodb)](https://hub.docker.com/r/ajeje93/speedtest-to-mongodb)
+
 ## Configuration
 
 All configurations are contained in the `.env` file.
