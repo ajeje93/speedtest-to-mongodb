@@ -29,3 +29,9 @@ To run just type `python3 speedtest.py` in your terminal.
 ### Docker
 
 Just type `docker-compose up -d` in your terminal.
+
+## Visualize data
+
+### Grafana
+
+You can find a Grafana dashboard to visualize data at <https://grafana.com/grafana/dashboards/12350>.
