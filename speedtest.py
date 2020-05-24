@@ -61,6 +61,50 @@ def speedtest(mongo_uri, database, collection):
     except Exception as e:
         get_module_logger(__name__).error("Error in speedtest function: {0}".format(e))
 
+def create_collections(mongo_uri, database, collection):
+    try:
+        # insert object in db
+        client = MongoClient(mongo_uri)
+        db = client[database]
+
+        filter = {"name": {"$regex": rf"^(?!system\.)\b(\w*{collection}\w*)\b"}}
+        collection_list = db.list_collection_names(filter=filter)
+        get_module_logger(__name__).debug("Collection list filtered: {0}".format(collection_list))
+
+        if collection not in collection_list :
+            db.command('create', collection)
+            get_module_logger(__name__).info("Created collection {0}".format(collection))
+        else:
+            get_module_logger(__name__).debug("Collection {0} already exists".format(collection))
+
+        if 'normalized_' + collection not in collection_list :
+            pipeline=[{"$project": {
+                        "ts": '$timestamp',
+                        "downloadMbps": {
+                            "$divide": [
+                            "$download.bandwidth",
+                            125000
+                            ]
+                        },
+                        "uploadMbps": {
+                            "$divide": [
+                            "$upload.bandwidth",
+                            125000
+                            ]
+                        },
+                        "pingJitter": '$ping.jitter',
+                        "pingLatency": '$ping.latency',
+                        "packetLoss": 1
+                    }}]
+            db.command('create', 'normalized_' + collection, viewOn=collection, pipeline=pipeline)
+            get_module_logger(__name__).info("Created view {0}".format('normalized_' + collection))
+        else:
+            get_module_logger(__name__).debug("View {0} already exists".format('normalized_' + collection))
+
+        client.close()
+    except Exception as e:
+        get_module_logger(__name__).error("Error in create_collection function: {0}".format(e))
+
 def main():
     try:
         load_dotenv()
@@ -89,6 +133,7 @@ def main():
         while True:
             time.sleep(delay_seconds - ((time.time() - starttime) % delay_seconds))
             get_module_logger(__name__).debug("Waiting for {0} seconds".format(delay_seconds))
+            create_collections(mongo_uri, database, collection)
             speedtest(mongo_uri, database, collection)
     except Exception as e:
         get_module_logger(__name__).error("Error in main function: {0}".format(e))
