@@ -30,6 +30,10 @@ To run just type `python3 speedtest.py` in your terminal.
 
 Just type `docker-compose up -d` in your terminal.
 
+To have a full stack of the application (speedtest-to-mongodb, [Grafana with MongoDB datasource plugin](https://github.com/ajeje93/grafana-mongodb-docker), MongoDB) use the command `docker-compose -f docker-compose.full-stack.yml up -d`.
+
+If you use the full stack you should add a MongoDB datasource in Grafana using as `URL` <http://localhost:3333>, as `MongoDB URL` the value of the environment variable `MONGODB_URI` (the default is `mongodb://root:password@mongodb:27017`) and as `MongoDB Database` the value of the environment variable `MONGODB_COLLECTION` (the default is `network_monitoring`). Afterwards, you can import the dashboard below to visualize data or create your own.
+
 ## Visualize data
 
 ### Grafana

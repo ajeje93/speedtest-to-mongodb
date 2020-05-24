@@ -1,0 +1,30 @@
+version: "3"
+services:
+  grafana:
+    image: ajeje93/grafana-mongodb:latest
+    restart: always
+    depends_on: 
+      - mongodb
+    ports:
+      - 3000:3000
+
+  speedtest-to-mongodb:
+    image: ajeje93/speedtest-to-mongodb:latest
+    restart: always
+    depends_on: 
+      - mongodb
+    environment:  
+      - MONGODB_URI=mongodb://root:password@mongodb:27017
+      - MONGODB_DB=network_monitoring
+      - MONGODB_COLLECTION=speedtest
+      - DELAY_SECONDS=30
+      - LOGGING_LEVEL=DEBUG
+
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
