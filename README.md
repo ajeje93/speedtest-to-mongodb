@@ -4,6 +4,8 @@ This utility send the speedtest of the network on which it is performed on a Mon
 
 [![Docker Build](https://img.shields.io/docker/cloud/build/ajeje93/speedtest-to-mongodb)](https://hub.docker.com/r/ajeje93/speedtest-to-mongodb)
 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fajeje93%2Fspeedtest-to-mongodb%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/ajeje93/speedtest-to-mongodb/goto?ref=master)
+
 ## Configuration
 
 All configurations are contained in the `.env` file.
