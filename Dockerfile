@@ -17,6 +17,7 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
     && mkdir /config
 
 ADD speedtest.py /
+ADD timeout.py /
 
 CMD [ "python", "./speedtest.py"]
 

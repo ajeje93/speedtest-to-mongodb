@@ -1,11 +1,13 @@
 import subprocess
-import os
+import os 
+import errno
 import json
-import datetime
+import datetime 
 from pymongo import MongoClient
 import time
 import logging
 from dotenv import load_dotenv
+from timeout import timeout
 
 logging_level = logging.DEBUG
 
@@ -37,6 +39,7 @@ def set_global_logging_level(logging_level_string):
              }
     logging_level = switcher.get(logging_level_string,logging.DEBUG)
 
+@timeout(120, os.strerror(errno.ETIMEDOUT))
 def speedtest(mongo_uri, database, collection):
     try:
         get_module_logger(__name__).info("Performing speedtest...")
