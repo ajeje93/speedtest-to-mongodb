@@ -4,7 +4,7 @@ ADD requirements.txt /
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
     && apt-get update \
-    && apt-get install -y -q --no-install-recommends gnupg1 apt-transport-https dirmngr lsb-release \
+    && apt-get install -y -q --no-install-recommends gnupg1 apt-transport-https dirmngr lsb-release build-essential python-dev \
     && export INSTALL_KEY=379CE192D401AB61 \
     && export DEB_DISTRO=$(lsb_release -sc) \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY \
