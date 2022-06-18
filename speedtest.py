@@ -70,10 +70,10 @@ def speedtest(mongo_uri, database, collection, speedtest_server_id):
         db = client[database]
         collection = db[collection]
         object_id = collection.insert_one(result).inserted_id
-        client.close()
         get_module_logger(__name__).debug('object id: {0}'.format(object_id))
         get_module_logger(__name__).debug('inserted obj: {0}'.format(
             collection.find_one({'_id': object_id})))
+        client.close()
 
         get_module_logger(__name__).info('Speedtest completed!')
     except Exception as e:
