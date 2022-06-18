@@ -19,6 +19,7 @@ services:
       - MONGODB_COLLECTION=speedtest
       - DELAY_SECONDS=30
       - LOGGING_LEVEL=DEBUG
+      - SPEEDTEST_SERVER_ID=
 
   mongodb:
     image: mongo

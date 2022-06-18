@@ -17,7 +17,7 @@ def get_module_logger(mod_name):
     """
     global logging_level
     logger = logging.getLogger(mod_name)
-        # Reset the logger.handlers if it already exists.
+        # reset the logger.handlers if it already exists.
     if logger.handlers:
         logger.handlers = []
     handler = logging.StreamHandler()
@@ -40,12 +40,19 @@ def set_global_logging_level(logging_level_string):
     logging_level = switcher.get(logging_level_string,logging.DEBUG)
 
 @timeout(120, os.strerror(errno.ETIMEDOUT))
-def speedtest(mongo_uri, database, collection):
+def speedtest(mongo_uri, database, collection, speedtest_server_id):
     try:
         get_module_logger(__name__).info("Performing speedtest...")
 
-        #get speedtest
-        result = json.loads(subprocess.run(['speedtest', "--accept-license", "--accept-gdpr" , '-f', 'json'], stdout=subprocess.PIPE).stdout.decode('utf-8'))
+        # get speedtest
+        command = ["speedtest-cli", "--json"]
+        if speedtest_server_id != "":
+            command.append("--server")
+            command.append(speedtest_server_id)
+        
+        get_module_logger(__name__).info("Running command: {0}".format(" ".join(command)))
+
+        result = json.loads(subprocess.run(command, stdout=subprocess.PIPE).stdout.decode('utf-8'))
         get_module_logger(__name__).debug("speedtest result: {0}".format(result))
 
         # convert timestamp
@@ -111,7 +118,7 @@ def create_collections(mongo_uri, database, collection):
 def main():
     try:
         load_dotenv()
-        #get config main config
+        # get config main config
         delay_seconds = int(os.getenv("DELAY_SECONDS", 60))
         get_module_logger(__name__).debug("Delay between speetests is {0}".format(delay_seconds))
 
@@ -119,7 +126,7 @@ def main():
         get_module_logger(__name__).debug("Logging level is {0}".format(logging_level_string))
 
 
-        #specific mongo config
+        # specific mongo config
         mongo_uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
         get_module_logger(__name__).debug("MongoDB URI is {0}".format(mongo_uri))
 
@@ -129,7 +136,11 @@ def main():
         collection = os.getenv("MONGODB_COLLECTION", "speedtest")
         get_module_logger(__name__).debug("MongoDB collection is {0}".format(collection))
 
-        #set logging level
+        # speedtest config
+        speedtest_server_id = os.getenv("SPEEDTEST_SERVER_ID", "")
+        get_module_logger(__name__).debug("Speedtest server id is {0}".format(speedtest_server_id))
+        
+        # set logging level
         set_global_logging_level(logging_level_string)
 
         starttime=time.time()
@@ -137,7 +148,7 @@ def main():
             time.sleep(delay_seconds - ((time.time() - starttime) % delay_seconds))
             get_module_logger(__name__).debug("Waiting for {0} seconds".format(delay_seconds))
             create_collections(mongo_uri, database, collection)
-            speedtest(mongo_uri, database, collection)
+            speedtest(mongo_uri, database, collection, speedtest_server_id)
     except Exception as e:
         get_module_logger(__name__).error("Error in main function: {0}".format(e))
 

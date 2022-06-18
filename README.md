@@ -17,6 +17,7 @@ The possible keys in the file are:
 * `MONGODB_COLLECTION`, the MongoDB collection name
 * `DELAY_SECONDS`, the delay between each speedtest in seconds
 * `LOGGING_LEVEL`, the logging level. It can be one of these values: `DEBUG`, `INFO`,`WARNING`,`ERROR`,`CRITICAL`
+* `SPEEDTEST_SERVER_ID`, the <https://www.speedtest.net> server ID (e.g.: 4302 for Vodafone IT). If missing the speedtest-cli will autoselect a server
 
 ## Run
 
