@@ -48,10 +48,10 @@ def speedtest(mongo_uri, database, collection, speedtest_server_id):
         get_module_logger(__name__).info('Performing speedtest...')
 
         # get speedtest
-        command = ['speedtest-cli', '--json']
+        command = ['speedtest', '--format=json',
+                   '--accept-license', '--accept-gdpr']
         if speedtest_server_id != '':
-            command.append('--server')
-            command.append(speedtest_server_id)
+            command.append('--server-id={0}'.format(speedtest_server_id))
 
         get_module_logger(__name__).info(
             'Running command: {0}'.format(' '.join(command)))
@@ -63,7 +63,7 @@ def speedtest(mongo_uri, database, collection, speedtest_server_id):
 
         # convert timestamp
         result['timestamp'] = datetime.datetime.strptime(
-            result['timestamp'], '%Y-%m-%dT%H:%M:%S.%f%z')
+            result['timestamp'], '%Y-%m-%dT%H:%M:%S%z')
 
         # insert object in db
         client = MongoClient(mongo_uri)
@@ -103,22 +103,24 @@ def create_collections(mongo_uri, database, collection):
 
         if 'normalized_' + collection not in collection_list:
             pipeline = [
-                {
-                    '$project': {
-                        'ts': '$timestamp',
-                        'downloadMbps': {
-                            '$divide': [
-                                '$download', 1000000
-                            ]
-                        },
-                        'uploadMbps': {
-                            '$divide': [
-                                '$upload', 1000000
-                            ]
-                        },
-                        'pingLatency': '$ping'
-                    }
-                }
+                {"$project": {
+                    "ts": '$timestamp',
+                    "downloadMbps": {
+                        "$divide": [
+                            "$download.bandwidth",
+                            125000
+                        ]
+                    },
+                    "uploadMbps": {
+                        "$divide": [
+                            "$upload.bandwidth",
+                            125000
+                        ]
+                    },
+                    "pingJitter": '$ping.jitter',
+                    "pingLatency": '$ping.latency',
+                    "packetLoss": 1
+                }}
             ]
             db.command('create', 'normalized_' + collection,
                        viewOn=collection, pipeline=pipeline)

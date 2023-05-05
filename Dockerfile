@@ -4,8 +4,8 @@ ADD requirements.txt /
 
 RUN apt-get update \
     && apt-get install -y -q --no-install-recommends curl \
-    && curl -s https://install.speedtest.net/app/cli/install.deb.sh | bash \
-    && apt-get install -y -q --no-install-recommends speedtest-cli \
+    && curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | bash \
+    && apt-get install -y -q --no-install-recommends speedtest \
     && apt-get purge -y curl \
     && apt-get -y autoremove \
     && apt-get clean all \
