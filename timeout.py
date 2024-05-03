@@ -14,12 +14,12 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
             raise TimeoutError(error_message)
 
         def wrapper(*args, **kwargs):
-            signal.signal(signal.SIGALRM, _handle_timeout)
-            signal.alarm(seconds)
+            signal.signal(signal.SIGALRM, _handle_timeout)  # type: ignore
+            signal.alarm(seconds)  # type: ignore
             try:
                 result = func(*args, **kwargs)
             finally:
-                signal.alarm(0)
+                signal.alarm(0)  # type: ignore
             return result
 
         return wraps(func)(wrapper)
