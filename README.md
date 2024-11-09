@@ -14,10 +14,13 @@ The possible keys in the file are:
 
 * `MONGODB_URI`, the URI to the MongoDB database
 * `MONGODB_DB`, the MongoDB database name
-* `MONGODB_COLLECTION`, the MongoDB collection name
-* `DELAY_SECONDS`, the delay between each speedtest in seconds
-* `LOGGING_LEVEL`, the logging level. It can be one of these values: `DEBUG`, `INFO`,`WARNING`,`ERROR`,`CRITICAL`
+* `SPEEDTEST_COLLECTION`, the MongoDB collection name for speedtest data
+* `SPEEDTEST_DELAY_SECONDS`, the delay between each speedtest in seconds
 * `SPEEDTEST_SERVER_ID`, the <https://www.speedtest.net> server ID (e.g.: 4302 for Vodafone IT). If missing the speedtest-cli will autoselect a server
+* `PING_COLLECTION`, the MongoDB collection name for ping data
+* `PING_DELAY_SECONDS`, the delay between each ping in seconds
+* `PING_HOST`, the host to ping
+* `LOGGING_LEVEL`, the logging level. It can be one of these values: `DEBUG`, `INFO`,`WARNING`,`ERROR`,`CRITICAL`
 
 ## Run
 
