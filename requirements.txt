@@ -1,5 +1,5 @@
 dnspython==2.9.0
 ping3==4.0.8
-pymongo==4.6.3
+pymongo==4.18.3
 python-dotenv==1.2.2
 schedule==1.2.2
